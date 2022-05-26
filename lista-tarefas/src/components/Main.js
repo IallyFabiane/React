@@ -1,5 +1,10 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
+
+//Form
+import { FaPlus} from 'react-icons/fa';
+
 import './Main.css';
+
 
 export default class Main extends Component {
     state = { // class fields JS
@@ -22,7 +27,7 @@ export default class Main extends Component {
          <h1>{novaTarefa}</h1>
          <form action='#'>
       <input onChange={this.handleChange} type='text'></input>
-      <button type='submit'>Enviar</button>
+      <button type='submit'><FaPlus /></button>
           </form>
       </div>
     );
