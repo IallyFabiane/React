@@ -12,13 +12,38 @@
   text-align: center;
 }
 
-button {
-  margin-left: 10px;
-  padding: 5px;
-  background-color:darkcyan;
-  border: none;
+.form {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-button:hover {
-  transform: scale(1.1);
+.form input[type="text"] {
+  height: 40px;
+  padding: 0 20px;
+  font-size: 20px;
+  border: 1px solid #ccc;
+  min-width: 80%;
+}
+
+.form button[type="submit"] {
+  border: none;
+  margin-left: 10px;
+  height: 40px;
+  width: 40px;
+  background-color: #f04c64;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tarefas {
+  margin-top: 20px;
+  list-style-type: square;
+}
+
+.tarefas li {
+  margin: 10px;
 }
