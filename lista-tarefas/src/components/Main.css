@@ -34,6 +34,7 @@
   margin-left: 10px;
   height: 40px;
   width: 40px;
+  border-radius: 2px;
   background-color: #f04c64;
   color: #fff;
   display: flex;
@@ -42,10 +43,44 @@
 }
 
 .tarefas {
-  margin-top: 20px;
-  list-style-type: square;
+  margin-top: 30px;
 }
 
 .tarefas li {
-  margin: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  transition: all 600ms;
 }
+
+.tarefas li:hover {
+    background-color: #51c5de;
+    cursor: pointer;
+}
+
+.tarefas li .edit {
+  margin-right: 15px;
+  background-color: yellow;
+  cursor: pointer;
+  transition: all 600ms;
+}
+
+.tarefas li .delete {
+  margin-right: 15px;
+  color: #f04c64;
+  cursor: pointer;
+  transition: all 600ms;
+}
+
+.tarefas li .edit, .tarefas li .delete{
+  margin-top: 10px;
+}
+
+.tarefas li span {
+  display: flex;
+  align-items: center;
+}
+
+ 
