@@ -1,24 +1,30 @@
 import { Component } from 'react';
-
-//Form
-import { FaPlus} from 'react-icons/fa';
-
-//Tarefas
-
-import { FaEdit, FaWindowClose} from 'react-icons/fa'
-
 import './Main.css';
-
+import Form from './Form';
+import Tarefas from './Tarefas'
 
 export default class Main extends Component {
     state = { // class fields JS
       novaTarefa: '',
-      tarefas: []
+      tarefas: [],
+      index: -1 //se o index for = -1 quer dizer que não há nada sendo editado
     }; //estado do componente
+
+componentDidMount(){ //será executado uma vez assim que o componente for montado
+  const tarefas = JSON.parse(localStorage.getItem('tarefas'));//transformando a string em objeto
+  if(!tarefas) return;
+  this.setState({tarefas});//setando  estado de tarefas
+}
+
+componentDidUpdate(prevProps, prevState){ //PARA A ATUALIZAÇÃO DOS COMPONENTES
+  const { tarefas } = this.state;
+  if(tarefas === prevState.tarefas) return; //retornando o estado prévio das tarefas
+    localStorage.setItem('tarefas', JSON.stringify(tarefas)); //salvando no localStorage na forma de string
+}
 
   handleSubmit = (e) => { //método que captura as tarefas
     e.preventDefault();
-    const { tarefas } = this.state;
+    const { tarefas, index } = this.state;
     let { novaTarefa } = this.state;
     novaTarefa = novaTarefa.trim() //eliminando os espaços do começo e do fim
 
@@ -28,14 +34,43 @@ export default class Main extends Component {
 
     const novasTarefas = [...tarefas]; //lista contendo as novasTarefas
 
-    this.setState({
-      tarefas: [...novasTarefas, novaTarefa],
-    })
+    if(index == -1){ //nada sendo editado
+      this.setState({
+        tarefas: [...novasTarefas, novaTarefa],
+        novaTarefa: '' //limpando o input após a adição de uma novaTarefa
+      })
+    } else { //algo sendo editado
+      const novasTarefas = [...tarefas];
+      novasTarefas[index] = novaTarefa; //novaTarefa assume o valor no índice que está sendo editado
+
+      this.setState({ //setando o estado como finalizada a edição
+        tarefas: [...novasTarefas],
+        index: -1
+      })
+    }
+
   }
 
   handleChange = (e) => { //método que captura o valor do elemento HTML que foi setado com o evento DOM
     this.setState( {
       novaTarefa: e.target.value //captura o valor do input
+    });
+  }
+
+  handleEdit = (e, index) => {
+    const { tarefas } = this.state;
+    this.setState({
+      index,
+      novaTarefa: tarefas[index]
+    })
+  }
+
+  handleDelete = (e, index) => {
+    const { tarefas } = this.state; //capturando as tarefas
+    const novasTarefas = [...tarefas]; //com o spread operator inserindo as tarefas no array novasTarefas
+    novasTarefas.splice(index, 1); //removendo no índice escolhido 1 elemento
+    this.setState({
+      tarefas: [...novasTarefas] //setando o state para que tarefas receba a lista de novasTarefas
     });
   }
 
@@ -46,19 +81,17 @@ export default class Main extends Component {
     return(
       <div className='main'>
          <h1>Lista de Tarefas</h1>
-         <form onSubmit={this.handleSubmit} action='#' className='form'>
-           <input onChange={this.handleChange} type='text' value={novaTarefa}></input>
-           <button type='submit'><FaPlus /></button>
-          </form>
-          <ul className='tarefas'>
-            {tarefas.map(tarefa => (<li key={tarefa}>
-              {tarefa}
-              <span>
-                <FaEdit className='edit'/>
-                <FaWindowClose className='delete'/>
-              </span>
-              </li>))}
-          </ul>
+         < Form
+         handleSubmit={this.handleSubmit}
+         handleChange={this.handleChange}
+         novaTarefa={novaTarefa}
+         />
+        <Tarefas
+        tarefas={tarefas}
+        handleEdit={this.handleEdit}
+        handleDelete={this.handleDelete}
+        />
+
       </div>
     );
   }
