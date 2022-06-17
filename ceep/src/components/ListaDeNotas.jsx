@@ -5,9 +5,9 @@ export class ListaDeNotas extends Component {
    render() {
        return (
          <ul>
-            {Array.of("Trabalho", "Trabalho", "Estudos").map(categoria => {
+            {Array.of("Trabalho", "Trabalho", "Estudos").map((categoria, index)) => {
               return (
-               <li>
+               <li key={index}>
                <div>{categoria}</div>
                <CardNota />
               </li>
