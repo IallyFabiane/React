@@ -1,2 +1,2 @@
-import ListaDeNotas from "./ListaDeNotas"
+import { ListaDeNotas } from "./ListaDeNotas"
 export default ListaDeNotas
