@@ -3,8 +3,8 @@ import "./estilo.css";
 
 export class FormularioCadastro extends Component {
 
-  constructor() {
-    super();
+  constructor(props) { //acessando a propriedade cirarNota de App.js
+    super(props);
     this.titulo = '';
     this.texto = '';
   }
@@ -22,7 +22,7 @@ export class FormularioCadastro extends Component {
   _criarNota (evento) {
     evento.preventDefault();
     evento.stopPropagation();
-    console.log(`Uma nova nota foi criada ${this.titulo} ${this.texto}`)
+    this.props.criarNota(this.titulo, this.texto);
   }
 
     render () {
