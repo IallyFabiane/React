@@ -4,64 +4,45 @@ import { Component } from 'react';
 class App extends Component { //componente react. Para escrever um código JavaScript em JSX usamos um par de chaves {} e escrevemos o códgio dentro
     //é possível criar um componente de estado sem utilizar o constructor
   state = {  //criando o estado para a classe. O estado corresponde a um objeto que contém os dados do componente que serão renderizados a partir da função render()
-    counter: 0,
-    posts: [ //array de objetos em jsx: utilizamos : e não o sinal = para declarar um array
-    {
-      id: 1,
-      title: 'título 1',
-      body: 'corpo 1'
-    },
-    {
-      id: 2,
-      title: 'título 2',
-      body: 'corpo 2'
-    },
-    {
-      id: 3,
-      title: 'título 3',
-      body: 'corpo 3'
-    }
-  ]
+    posts: [] //array de objetos em jsx: utilizamos : e não o sinal = para declarar um array
   };
 
-timeOutUpdate = null;
-
-componentDidMount() { //componente de ciclo de vida. Ele será executado uma vez após o componente ser montado  na tela. É um lifecyle method de montagem
-    this.handleTimeOut();
+componentDidMount() { //componente de ciclo de vida. Ele será executado uma vez após o componente ser montado na tela. É um lifecyle method de montagem.Pode ser utilizado para buscar dados de uma API
+  this.loadPosts();
 }
 
-componentDidUpdate() { //componente de ciclo de vida. É um lifecycle method de atualização.
-  this.handleTimeOut();
-}
+loadPosts = async () => {
+  const postsResponse = fetch('https://jsonplaceholder.typicode.com/posts'); // usando a fetch api nativa do navegador para fazer requisições
+  const photosResponse = fetch('https://jsonplaceholder.typicode.com/photos');
+  const [posts, photos] = await Promise.all([postsResponse, photosResponse]);//retornando um array de promessas
+  const postsJson = await posts.json();
+  const photosJson = await photos.json();
 
-componentWillUnmount() {//componente de ciclo de vida. É um lifecucle method de deesmontagem.
-  clearTimeout(this.timeOutUpdate);// com o clearTimeOut é realizada a 'limpeza' na tela
-}
-
-handleTimeOut = () => {
-    const { posts, counter } = this.state
-    posts[0].title = 'O título mudou';
-
-    this.timeOutUpdate = setTimeout(() => {
-      this.setState({ posts, counter: counter + 1 });
-    }, 3000);
+  const postsAndPhotos = postsJson.map((post, index) => {
+    return({...post, cover: photosJson[index].url})
+  })
+  this.setState({ posts: postsAndPhotos });
 }
 
 render() {
 //só podemos ter um componente root dentro da página com React. Para adicionar mais um componente, devemos colocá-lo dentro do root
 //precisamos inserir um Key com uma propriedade única dentro do componente-pai quando estamos utilizando o método .map()
-    const { posts, counter } = this.state;
+    const { posts } = this.state;
 
     return (
-      <div className='App'>
-        <h2>{counter}</h2>
+      <section className='container'>
+        <div className='posts'>
         {posts.map(post => (
-          <div key={post.id}> 
+        <div className='post'>
+          <img src={post.cover} alt= {post.title}/>
+          <div key={post.id} className= 'post-content'> 
             <h1>{post.title}</h1>
             <p>{post.body}</p>
           </div>
+        </div>
         ))}
       </div>
+      </section>
     );
   }
 } 
