@@ -1,5 +1,7 @@
 import './App.css';
 import { Component } from 'react';
+import { PostCard } from './components/PostCard/';
+import { loadPosts } from './utils/load-posts'
 
 class App extends Component { //componente react. Para escrever um código JavaScript em JSX usamos um par de chaves {} e escrevemos o códgio dentro
     //é possível criar um componente de estado sem utilizar o constructor
@@ -7,20 +9,12 @@ class App extends Component { //componente react. Para escrever um código JavaS
     posts: [] //array de objetos em jsx: utilizamos : e não o sinal = para declarar um array
   };
 
-componentDidMount() { //componente de ciclo de vida. Ele será executado uma vez após o componente ser montado na tela. É um lifecyle method de montagem.Pode ser utilizado para buscar dados de uma API
-  this.loadPosts();
+async componentDidMount() { //componente de ciclo de vida. Ele será executado uma vez após o componente ser montado na tela. É um lifecyle method de montagem.Pode ser utilizado para buscar dados de uma API
+  await this.loadPosts();
 }
 
 loadPosts = async () => {
-  const postsResponse = fetch('https://jsonplaceholder.typicode.com/posts'); // usando a fetch api nativa do navegador para fazer requisições
-  const photosResponse = fetch('https://jsonplaceholder.typicode.com/photos');
-  const [posts, photos] = await Promise.all([postsResponse, photosResponse]);//retornando um array de promessas
-  const postsJson = await posts.json();
-  const photosJson = await photos.json();
-
-  const postsAndPhotos = postsJson.map((post, index) => {
-    return({...post, cover: photosJson[index].url})
-  })
+  const postsAndPhotos = await loadPosts();
   this.setState({ posts: postsAndPhotos });
 }
 
@@ -33,19 +27,18 @@ render() {
       <section className='container'>
         <div className='posts'>
         {posts.map(post => (
-        <div className='post'>
-          <img src={post.cover} alt= {post.title}/>
-          <div key={post.id} className= 'post-content'> 
-            <h1>{post.title}</h1>
-            <p>{post.body}</p>
-          </div>
-        </div>
+          <PostCard 
+          key={post.id}
+          title={post.title} 
+          body={post.body}
+          id={post.id}
+          cover={post.cover}
+          />
         ))}
-      </div>
+        </div>
       </section>
     );
   }
 } 
 
 export default App;
-
