@@ -8,9 +8,9 @@ class Home extends Component { //componente react. Para escrever um código Java
     //é possível criar um componente de estado sem utilizar o constructor
   state = {  //criando o estado para a classe. O estado corresponde a um objeto que contém os dados do componente que serão renderizados a partir da função render()
     posts: [], //array de objetos em jsx: utilizamos : e não o sinal = para declarar um array
-    allPots: [],
+    allPosts: [],
     page: 0,
-    postsPerPage: 2
+    postsPerPage: 10
   };
 
 async componentDidMount() { //componente de ciclo de vida. Ele será executado uma vez após o componente ser montado na tela. É um lifecyle method de montagem.Pode ser utilizado para buscar dados de uma API
@@ -22,26 +22,41 @@ loadPosts = async () => {
   const postsAndPhotos = await loadPosts();
   this.setState({ 
     posts: postsAndPhotos.slice(page, postsPerPage),
-    allPots: postsAndPhotos
+    allPosts: postsAndPhotos
   });
 }
 
 loadMorePosts = () => {
-  console.log('Load more posts chamado')
+  const {
+   page,
+   postsPerPage,
+   allPosts,
+   posts
+  } = this.state
+
+  const nextPage = posts + postsPerPage;
+  const nextPosts= allPosts.slice(nextPage, nextPage + postsPerPage)
+  posts.push(...nextPosts);
+
+  this.setState({ posts, page: nextPage})
 }
 
 render() {
 //só podemos ter um componente root dentro da página com React. Para adicionar mais um componente, devemos colocá-lo dentro do root
 //precisamos inserir um Key com uma propriedade única dentro do componente-pai quando estamos utilizando o método .map()
-    const { posts } = this.state;
+    const { posts, page, postsPerPage, allPosts } = this.state;
+    const noMoreOPosts = page + postsPerPage >= allPosts.length;
 
     return (
       <section className='container'>
         <Posts posts={posts} />
-        <Button 
+        <div className='button-container'>
+          <Button 
+          disabled={noMoreOPosts}
           text="Load more posts"
           onClick={this.loadMorePosts}
-        />
+          />
+        </div>
       </section>
     );
   }
