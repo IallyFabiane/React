@@ -1,0 +1,14 @@
+.text-input {
+    width: 20%;
+    padding: 5px 10px;
+    font-size: 30px;
+    border: none;
+    background-color: lavender;
+    box-shadow: 3px 3px 3px 2px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+}
+
+.text-input:focus {
+    border: 0.5px solid black;
+    background-color: lightblue;
+}
