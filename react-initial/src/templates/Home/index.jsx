@@ -46,7 +46,7 @@ loadMorePosts = () => {
 
 handleChange = (e) => {
   const {value} = e.target;
-  this.setState({ searchValue: value })
+  this.setState({...this.state, searchValue: value })
 }
 
 render() {
@@ -64,7 +64,7 @@ render() {
             <h1>Search value: {searchValue}</h1>
         )} 
 
-        <TextInput searchValue={searchValue} handleChange={this.handleChange} /> 
+        <TextInput searchValue={searchValue} actionFn={this.handleChange} /> 
         
         </div>
 
@@ -91,4 +91,3 @@ render() {
 } 
 
 export default Home;
-
