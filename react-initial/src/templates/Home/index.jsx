@@ -15,14 +15,15 @@ class Home extends Component { //componente react. Para escrever um código Java
     searchValue:''
   };
 
-async componentDidMount() { //componente de ciclo de vida. Ele será executado uma vez após o componente ser montado na tela. É um lifecyle method de montagem.Pode ser utilizado para buscar dados de uma API
-  await this.loadPosts();
+componentDidMount() { //componente de ciclo de vida. Ele será executado uma vez após o componente ser montado na tela. É um lifecyle method de montagem.Pode ser utilizado para buscar dados de uma API
+  this.loadPosts();
 }
 
 loadPosts = async () => {
   const { page, postsPerPage } = this.state
   const postsAndPhotos = await loadPosts();
   this.setState({ 
+    ...this.state,
     posts: postsAndPhotos.slice(page, postsPerPage),
     allPosts: postsAndPhotos
   });
