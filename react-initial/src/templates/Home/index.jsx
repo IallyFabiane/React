@@ -41,7 +41,7 @@ loadMorePosts = () => {
   const nextPosts= allPosts.slice(nextPage, nextPage + postsPerPage)
   posts.push(...nextPosts);
 
-  this.setState({ posts, page: nextPage})
+  this.setState({ ...this.state, posts, page: nextPage})
 }
 
 handleChange = (e) => {
