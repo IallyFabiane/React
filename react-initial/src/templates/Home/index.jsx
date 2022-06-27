@@ -24,7 +24,7 @@ loadPosts = async () => {
   const postsAndPhotos = await loadPosts();
   this.setState({ 
     ...this.state,
-    posts: postsAndPhotos.slice(page, postsPerPage),
+    posts: postsAndPhotos.slice(page, page + postsPerPage),
     allPosts: postsAndPhotos
   });
 }
