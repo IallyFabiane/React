@@ -1,12 +1,12 @@
 import './styles.css';
 
-export const TextInput = ({ searchValue, handleChange}) => {
+export const TextInput = ({ searchValue, actionFn}) => {
    return (
    <input 
         className='text-input'
         type="search" 
         value={searchValue}
-        onChange={handleChange}
+        onChange={actionFn}
         placeholder="Type your search"
     />
     );
