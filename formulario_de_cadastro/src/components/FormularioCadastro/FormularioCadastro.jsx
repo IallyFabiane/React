@@ -1,77 +1,42 @@
-import React, {useState} from 'react';
-import { TextField, Button, Switch, FormControlLabel } from '@mui/material';
+import { React, useState, useEffect } from 'react';
+import DadosEntrega from './DadosEntrega';
+import DadosPessoais from './DadosPessoais';
+import DadosUsuario from './DadosUsuario';
+import { Stepper, Typography, Step, StepLabel} from '@mui/material';
 
-function FormularioCadastro ({aoEnviar, validarCpf}) {
-    const [nome, setNome] = useState(""); //hook. O índice 0 do array é o valor do estado atual e o índice 1 é o nome da função que altera o estado
-    const [sobrenome, setSobrenome] = useState("");
-    const [cpf, setCpf] = useState("");
-    const [promocoes, setPromocoes] = useState(true);
-    const [novidades, setNovidades] = useState(true);
-    const [erros, setErros] = useState({cpf:{valido: true, texto:""}})
-    return(
-        <form onSubmit={ event => {
-            event.preventDefault();
-            aoEnviar({nome, sobrenome, cpf, promocoes, novidades})//recebendo props
-            }}>
-            <TextField 
-            value={nome}
-            onChange={ event => {
-                setNome(event.target.value);
-            }}
-            variant='outlined' 
-            color='secondary'
-             margin='normal' 
-             fullWidth id='NOME' 
-             label='NOME'/>
+function FormularioCadastro ({aoEnviar}) {
+    const [etapaAtual, setEtapaAtual] = useState(0);
+    const [dadosColetados, setDados] = useState({})
+    useEffect( () => {
+        if (etapaAtual === formularios.length-1) {
+            aoEnviar(dadosColetados);
+        }
+    })
 
-            <TextField 
-            value={sobrenome}
-            onChange={ event => {
-                 setSobrenome(event.target.value);
-            }}
-            variant='outlined'
-            color='secondary' 
-            margin='normal'
-            fullWidth 
-            id='SOBRENOME' 
-            label='SOBRENOME'/>
+    const formularios = [<DadosUsuario aoEnviar={coletarDados}  />, <DadosPessoais aoEnviar={coletarDados} />, <DadosEntrega aoEnviar={coletarDados}  />,
+    <Typography variant="h5" color="secondary">Obrigado pelo cadastro!</Typography>]
 
-            <TextField 
-            value={cpf}
-            onChange={ event => {
-                 setCpf(event.target.value);
-            }}
-            onBlur={event => {
-                const ehValido = validarCpf(cpf)
-                setErros({cpf: ehValido})
-            }}
-            error={!erros.cpf.valido} //propriedade error, para validação(mui)
-            helperText={erros.cpf.texto} //utilizado para dar dicas ao usuário da aplicação (mui)
-            variant='outlined'
-            color='secondary'
-            margin='normal' 
-            fullWidth 
-            id='CPF' 
-            label='CPF'/>
+    function coletarDados (dados) {
+        setDados({...dadosColetados, ...dados});
+        proximo();
+    }
 
-            <FormControlLabel 
-            label='promocoes' 
-            checked={promocoes}
-            control={<Switch onChange={event => { setPromocoes(event.target.checked)}} name='promoções' defaultchecked={promocoes} color='secondary'/>}/>
+    function proximo (dados) {
+        setEtapaAtual(etapaAtual+ 1) 
+    }
 
-            <FormControlLabel 
-            label='novidades' 
-            checked={novidades}
-            control={<Switch onChange={event => { setNovidades(event.target.checked)}} name='novidades' defaultchecked={novidades} color='secondary'/>}/>
-
-            <Button
-            variant='contained' 
-            type='submit'
-            color='secondary'>
-                Cadastrar
-            </Button>
-        </form>
-    );
+    return <> 
+    <Stepper activeStep={etapaAtual} >
+        <Step><StepLabel>Login</StepLabel></Step>
+        <Step><StepLabel>Dados Pessoais</StepLabel></Step>
+        <Step><StepLabel>Dados de Entrega</StepLabel></Step>
+        <Step><StepLabel>Finalização</StepLabel></Step>
+    </Stepper>
+    {formularios[etapaAtual]} 
+    </>;
+    
 }
 
 export default FormularioCadastro;
+            
+            
