@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Button /> should match snapshot 1`] = `
+<button
+  class="button"
+  disabled=""
+>
+  Load more
+</button>
+`;
+
+exports[`should match snapshot 1`] = `
+<button
+  class="button"
+  disabled=""
+>
+  Load more
+</button>
+`;
