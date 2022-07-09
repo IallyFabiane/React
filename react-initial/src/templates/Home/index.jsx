@@ -1,93 +1,74 @@
-import './styles.css';
-import { Component } from 'react';
-import { loadPosts } from '../../utils/load-posts'
-import { Posts } from '../../components/Posts';
-import { Button } from '../../components/Button'
-import { TextInput } from '../../components/TextInput'
+/* eslint-disable react/react-in-jsx-scope */
+import { useCallback, useEffect, useState } from 'react';
 
-class Home extends Component { //componente react. Para escrever um código JavaScript em JSX usamos um par de chaves {} e escrevemos o códgio dentro
-    //é possível criar um componente de estado sem utilizar o constructor
-  state = {  //criando o estado para a classe. O estado corresponde a um objeto que contém os dados do componente que serão renderizados a partir da função render()
-    posts: [], //array de objetos em jsx: utilizamos : e não o sinal = para declarar um array
-    allPosts: [],
-    page: 0,
-    postsPerPage: 2,
-    searchValue:''
+import './styles.css';
+
+import { Posts } from '../../components/Posts';
+import { loadPosts } from '../../utils/load-posts';
+import { Button } from '../../components/Button';
+import { TextInput } from '../../components/TextInput';
+
+export const Home = () => {
+  const [posts, setPosts] = useState([]);
+  const [allPosts, setAllPosts] = useState([]);
+  const [page, setPage] = useState(0);
+  const [postsPerPage] = useState(2);
+  const [searchValue, setSearchValue] = useState('');
+
+  const handleLoadPosts = useCallback(async (page, postsPerPage) => {
+    const postsAndPhotos = await loadPosts();
+
+    setPosts(postsAndPhotos.slice(page, postsPerPage));
+    setAllPosts(postsAndPhotos);
+  }, []);
+
+  useEffect(() => {
+    console.log(new Date().toLocaleString('pt-BR'));
+    handleLoadPosts(0, postsPerPage);
+  }, [handleLoadPosts, postsPerPage]);
+
+  const loadMorePosts = () => {
+    const nextPage = page + postsPerPage;
+    const nextPosts = allPosts.slice(nextPage, nextPage + postsPerPage);
+    posts.push(...nextPosts);
+
+    setPosts(posts);
+    setPage(nextPage);
   };
 
-componentDidMount() { //componente de ciclo de vida. Ele será executado uma vez após o componente ser montado na tela. É um lifecyle method de montagem.Pode ser utilizado para buscar dados de uma API
-  this.loadPosts();
-}
+  const handleChange = (e) => {
+    const { value } = e.target;
+    setSearchValue(value);
+  };
 
-loadPosts = async () => {
-  const { page, postsPerPage } = this.state
-  const postsAndPhotos = await loadPosts();
-  this.setState({ 
-    ...this.state,
-    posts: postsAndPhotos.slice(page, page + postsPerPage),
-    allPosts: postsAndPhotos
-  });
-}
+  const noMorePosts = page + postsPerPage >= allPosts.length;
+  const filteredPosts = searchValue
+    ? allPosts.filter((post) => {
+        return post.title.toLowerCase().includes(searchValue.toLowerCase());
+      })
+    : posts;
 
-loadMorePosts = () => {
-  const {
-   page,
-   postsPerPage,
-   allPosts,
-   posts
-  } = this.state
+  return (
+    <section className="container">
+      <div className="search-container">
+        {!!searchValue && <h1>Search value: {searchValue}</h1>}
 
-  const nextPage = posts + postsPerPage;
-  const nextPosts = allPosts.slice(nextPage, nextPage + postsPerPage)
-  posts.push(...nextPosts);
+        <TextInput searchValue={searchValue} handleChange={handleChange} />
+      </div>
 
-  this.setState({ ...this.state, posts, page: nextPage})
-}
+      {filteredPosts.length > 0 && <Posts posts={filteredPosts} />}
 
-handleChange = (e) => {
-  const {value} = e.target;
-  this.setState({...this.state, searchValue: value })
-}
+      {filteredPosts.length === 0 && <p>Não existem posts =(</p>}
 
-render() {
-//só podemos ter um componente root dentro da página com React. Para adicionar mais um componente, devemos colocá-lo dentro do root
-//precisamos inserir um Key com uma propriedade única dentro do componente-pai quando estamos utilizando o método .map()
-    const { posts, page, postsPerPage, allPosts, searchValue} = this.state;
-    const noMorePosts = page + postsPerPage >= allPosts.length;
-    const filteredPosts = !!searchValue ? allPosts.filter(post => { //condição de filtragem os posts
-      return post.title.toLowerCase().includes(searchValue.toLocaleLowerCase());
-    }): posts;
-    return (
-      <section className='container'> 
-      <div className='search-container'>
-        {!!searchValue && (
-            <h1>Search value: {searchValue}</h1>
-        )} 
-
-        <TextInput searchValue={searchValue} actionFn={this.handleChange} /> 
-        
-        </div>
-
-        {filteredPosts.length > 0 && ( //condição de renderização dos posts
-          <Posts posts={filteredPosts} />
-        )}
-
-         {filteredPosts.length === 0 && ( //caso não renderize
-          <p>Não existem posts</p>
-        )}
-
-        <div className='button-container'>
+      <div className="button-container">
         {!searchValue && (
-            <Button
-            disabled={noMorePosts}
+          <Button
             text="Load more posts"
-            onClick={this.loadMorePosts}
-            />
+            onClick={loadMorePosts}
+            disabled={noMorePosts}
+          />
         )}
-        </div>
-      </section>
-    );
-  }
-} 
-
-export default Home;
+      </div>
+    </section>
+  );
+};
