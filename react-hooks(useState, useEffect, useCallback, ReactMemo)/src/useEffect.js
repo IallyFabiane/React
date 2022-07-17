@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
-import './useState.css';
+import './common.css';
 const eventFn = () => {
   console.log('h2 clicado');
 };
