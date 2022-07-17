@@ -1,5 +1,5 @@
 import P from 'prop-types';
-import './useState.css';
+import './common.css';
 import React, { useState, useCallback } from 'react';
 
 const Button = React.memo(function Button({ incrementButton }) {
@@ -21,8 +21,7 @@ function UseCallback() {
   console.log('Pai, renderizou');
 
   return (
-    <div className="App">
-      <p className="title">Teste 3</p>
+    <div className="App-header">
       <h1>C1: {counter}</h1>
       <Button incrementButton={incrementCounter} />
     </div>
