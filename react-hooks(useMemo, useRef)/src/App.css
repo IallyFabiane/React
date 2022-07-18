@@ -1,0 +1,73 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.App {
+  background-color: #272530;
+  text-align: center;
+  color: #fff;
+}
+
+h6 {
+  padding-top: 20px;
+  color: #b3b3b3;
+  font-size: 18px;
+}
+
+p {
+  width: 284px;
+  position: relative;
+  display: block;
+  padding: 10px;
+  margin: 10px auto;
+}
+
+input {
+  display: block;
+  margin: 40px auto;
+  padding: 0.8rem;
+  width: 100%;
+  height: 100%;
+  background-color: #272530;
+  border: 2px solid #2f2c45;
+  border-radius: 5px;
+  font-size: 18px;
+  outline: none;
+  transition: all 0.3s;
+  color: #FFF;
+}
+
+input:focus {
+  border: 2px solid #38f2ff;
+}
+
+label {
+  position: absolute;
+  left: 10px;
+  top: 14px;
+  transition: all 0.2s;
+  padding: 0 2px;
+  z-index: 1;
+  color: #b3b3b3;
+  user-select: none;
+}
+
+label::before {
+  content: '';
+  height: 5px;
+  background-color: #272530;
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 100%;
+  z-index: -1;
+}
+
+input:focus + label {
+  top: -10px;
+  color: #38f2ff;
+  font-size: 18px;
+  text-shadow: 1.5px 1px 2px rgba(8, 8, 8, 0.493);
+}
