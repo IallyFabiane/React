@@ -1,0 +1,13 @@
+body {
+  background-color: black;
+}
+
+h1{
+  text-align: center;
+  color: lightblue;
+}
+
+input {
+  display: block;
+  margin: 10px auto;
+}
