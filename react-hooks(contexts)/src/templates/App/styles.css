@@ -1,0 +1,11 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(127, 255, 212, 0.709);
+}
+
+button {
+  margin-top: 10px;
+  margin-left: 10px;
+}
