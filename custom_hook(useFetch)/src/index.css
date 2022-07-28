@@ -1,0 +1,15 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: navajowhite;
+  box-sizing: border-box;
+  font: 20px sans-serif;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat( 3, 1fr);
+  column-gap: 20px;
+  grid-row: 5px;
+  margin: 20px;
+}
